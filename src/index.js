@@ -6,6 +6,7 @@ import createSagaMiddleware from 'redux-saga';
 import{ put, takeEvery } from 'redux-saga/effects';
 import logger from 'redux-logger';
 import App from './App';
+import axios from 'axios';
 
 // this startingPlantArray should eventually be removed
 const startingPlantArray = [
@@ -14,19 +15,49 @@ const startingPlantArray = [
   { id: 3, name: 'Oak' }
 ];
 
-function* watcherSaga() {
+function* addPlantSaga(action) {
+  yield axios({
+    method: 'POST',
+    url: '/api/plants',
+    data: action.payload
+  });
 
+  yield put({
+    type: 'FETCH_PLANT'
+  });
+}
+
+function* fetchPlantSaga(action) {
+  let response = yield axios({
+    method: 'GET',
+    url: '/api/plants'
+  });
+
+  yield put({
+    type: 'SET_PLANT',
+    payload: response.data
+  })
+}
+
+function* watcherSaga() {
+  yield takeEvery('ADD_PLANT', addPlantSaga);
+  yield takeEvery('FETCH_PLANT', fetchPlantSaga);
 }
 
 const sagaMiddleware = createSagaMiddleware();
 
 const plantList = (state = startingPlantArray, action) => {
+  if (action.type === 'SET_PLANT') {
+    return action.payload;
+  }
+
   switch (action.type) {
     case 'ADD_PLANT':
       return [ ...state, action.payload ]
     default:
       return state;
   }
+
 };
 
 const store = createStore(
