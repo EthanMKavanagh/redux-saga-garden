@@ -31,7 +31,10 @@ class NewPlantForm extends Component {
 
     addNewPlant = event => {
         event.preventDefault();
-        this.props.dispatch({ type: 'ADD_PLANT', payload: this.state.newPlant })
+        this.props.dispatch({ 
+            type: 'ADD_PLANT',
+            payload: this.state.newPlant
+        });
         this.setState({
             newPlant: {
                 id: this.state.newPlant.id + 1,
@@ -50,7 +53,16 @@ class NewPlantForm extends Component {
         return (
             <div>
                 <h3>This is the form</h3>
-                <pre>{JSON.stringify(this.state)}</pre>
+                <p>
+                    Name: {this.state.newPlant.name},
+                    Kingdom: {this.state.newPlant.kingdom},
+                    Clade: {this.state.newPlant.clade},
+                    Order: {this.state.newPlant.order},
+                    Family: {this.state.newPlant.family},
+                    Subfamily: {this.state.newPlant.subfamily},
+                    Genus: {this.state.newPlant.genus}
+                </p>
+                {/* <pre>{JSON.stringify(this.state)}</pre> */}
                 <form onSubmit={this.addNewPlant}>
                     <input placeholder='name' type='text' value={this.state.newPlant.name} onChange={(event) => this.handleChangeFor(event, 'name')} />
                     <input placeholder='kingdom' type='text' value={this.state.newPlant.kingdom} onChange={(event) => this.handleChangeFor(event, 'kingdom')} />

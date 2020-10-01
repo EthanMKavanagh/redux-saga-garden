@@ -8,56 +8,43 @@ import logger from 'redux-logger';
 import App from './App';
 import axios from 'axios';
 
-// this startingPlantArray should eventually be removed
-const startingPlantArray = [
-  { id: 1, name: 'Rose' },
-  { id: 2, name: 'Tulip' },
-  { id: 3, name: 'Oak' }
-];
 
 function* addPlantSaga(action) {
   yield axios({
     method: 'POST',
-    url: '/api/plants',
+    url: '/api/plant',
     data: action.payload
   });
 
   yield put({
-    type: 'FETCH_PLANT'
+    type: 'FETCH_PLANTS'
   });
 }
 
-function* fetchPlantSaga(action) {
+function* fetchPlantsSaga(action) {
   let response = yield axios({
     method: 'GET',
-    url: '/api/plants'
+    url: '/api/plant'
   });
 
   yield put({
-    type: 'SET_PLANT',
+    type: 'SET_PLANTS',
     payload: response.data
   })
 }
 
 function* watcherSaga() {
   yield takeEvery('ADD_PLANT', addPlantSaga);
-  yield takeEvery('FETCH_PLANT', fetchPlantSaga);
+  yield takeEvery('FETCH_PLANTS', fetchPlantsSaga);
 }
 
 const sagaMiddleware = createSagaMiddleware();
 
-const plantList = (state = startingPlantArray, action) => {
-  if (action.type === 'SET_PLANT') {
+const plantList = (state = [], action) => {
+  if (action.type === 'SET_PLANTS') {
     return action.payload;
   }
-
-  switch (action.type) {
-    case 'ADD_PLANT':
-      return [ ...state, action.payload ]
-    default:
-      return state;
-  }
-
+  return state;
 };
 
 const store = createStore(
