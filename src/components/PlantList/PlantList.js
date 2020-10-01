@@ -13,19 +13,21 @@ class PlantList extends Component {
         });
     }
 
-    // onDelete = (id) => {
-    //     this.props.dispatch({
-    //         type: 'DELETE_PLANT'
-    //     });
-    // }
+    onDelete = (id) => {
+        this.props.dispatch({
+            type: 'DELETE_PLANT',
+            payload: id
+        });
+    }
 
     render() {
         return (
             <div>
                 <h3>This is the plant list</h3>
                 {this.props.reduxState.plantList.map(plant =>
-                    <li key={plant.id}>{plant.name}</li>
-                    // <button onClick={() => {this.onDelete(this.plant.id)}>Delete</button>
+                    <li key={plant.id}>{plant.name}
+                        <button onClick={() => this.onDelete(plant.id)}>Delete</button>
+                    </li>
                 )}
                 {/* <pre>{JSON.stringify(this.props.reduxState)}</pre> */}
             </div>

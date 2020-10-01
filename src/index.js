@@ -33,9 +33,21 @@ function* fetchPlantsSaga(action) {
   })
 }
 
+function* deletePlantSaga(action) {
+  yield axios({
+    method: 'DELETE',
+    url: `/api/plant/${action.payload}`
+  });
+
+  yield put({
+    type: 'FETCH_PLANTS'
+  });
+}
+
 function* watcherSaga() {
   yield takeEvery('ADD_PLANT', addPlantSaga);
   yield takeEvery('FETCH_PLANTS', fetchPlantsSaga);
+  yield takeEvery('DELETE_PLANT', deletePlantSaga);
 }
 
 const sagaMiddleware = createSagaMiddleware();
